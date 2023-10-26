@@ -16,17 +16,20 @@ public class RISolver
 	private final Graph queryGraph;
 	//Should query occurrences be stored?
 	private final boolean dump;
+	//Occurrences file output
+	private final String occFile;
 	//Object that eventually handles the storage of query occurrences into output file
 	private final FileManager fm;
 	//Matching state machine
 	private MatchingMachine mama;
 
-	public RISolver(Graph targetGraph, Graph queryGraph, boolean dump, FileManager fm)
+	public RISolver(Graph targetGraph, Graph queryGraph, boolean dump, String occFile, FileManager fm)
 	{
 		this.targetGraph=targetGraph;
 		this.queryGraph=queryGraph;
 		this.dump=dump;
 		this.fm=fm;
+		this.occFile=occFile;
 	}
 	
 	public long match(int delta)
@@ -230,7 +233,7 @@ public class RISolver
 								occ.addEdge(dest,source,props[0],props[1]);
 						}
 						//Print the occurrence to standard output
-						fm.printOcc(occ);
+						fm.printOcc(occ, occFile);
 					}
 					psi = si;
 				}

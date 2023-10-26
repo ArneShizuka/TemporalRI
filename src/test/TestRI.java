@@ -26,7 +26,7 @@ public class TestRI
         double totalTimeReading=(fine-inizio)/1000;
         inizio=System.currentTimeMillis();
         System.out.println("Matching query to target...");
-        RISolver ri=new RISolver(target,query,dump,fm);
+        RISolver ri=new RISolver(target,query,dump,null,fm);
         if(dump)
         {
             System.out.println("\nOCCURRENCES FOUND:\n");

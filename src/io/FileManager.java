@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class FileManager
 {
@@ -124,41 +125,54 @@ public class FileManager
     }
 
     //Print to standard output the occurrence found (only if dump is enabled)
-    public void printOcc(Graph occ)
+    public void printOcc(Graph occ, String occFile)
     {
-        //Print occurrence's nodes info
-        Int2IntOpenHashMap nodeLabs=occ.getNodeLabs();
-        ObjectArrayList<int[]> edgeProps=occ.getEdgeProps();
-        Int2ObjectOpenHashMap<Int2ObjectAVLTreeMap<Int2IntOpenHashMap>> outAdjLists=occ.getOutAdjLists();
-        IntIterator it=nodeLabs.keySet().iterator();
-        int idNode=it.nextInt();
-        System.out.print("("+idNode+":"+nodeLabs.get(idNode)+")");
-        while(it.hasNext())
-        {
-            idNode=it.nextInt();
-            System.out.print(","+"("+idNode+":"+nodeLabs.get(idNode)+")");
-        }
-        System.out.print("\t");
-        //Print occurrence's edges info
-        String edgeStr="";
-        for (Int2ObjectMap.Entry<Int2ObjectAVLTreeMap<Int2IntOpenHashMap>> source : outAdjLists.int2ObjectEntrySet())
-        {
-            int idSource= source.getIntKey();
-            Int2ObjectAVLTreeMap<Int2IntOpenHashMap> mapTimes=source.getValue();
-            for (Int2ObjectMap.Entry<Int2IntOpenHashMap> time : mapTimes.int2ObjectEntrySet())
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(occFile, true));
+
+            //Print occurrence's nodes info
+            Int2IntOpenHashMap nodeLabs=occ.getNodeLabs();
+            ObjectArrayList<int[]> edgeProps=occ.getEdgeProps();
+            Int2ObjectOpenHashMap<Int2ObjectAVLTreeMap<Int2IntOpenHashMap>> outAdjLists=occ.getOutAdjLists();
+            IntIterator it=nodeLabs.keySet().iterator();
+            int idNode=it.nextInt();
+            System.out.print("("+idNode+":"+nodeLabs.get(idNode)+")");
+            bw.write("("+idNode+":"+nodeLabs.get(idNode)+")");
+            while(it.hasNext())
             {
-                Int2IntOpenHashMap mapAdiacs=time.getValue();
-                for (Int2IntMap.Entry dest : mapAdiacs.int2IntEntrySet())
+                idNode=it.nextInt();
+                System.out.print(","+"("+idNode+":"+nodeLabs.get(idNode)+")");
+                bw.write(","+"("+idNode+":"+nodeLabs.get(idNode)+")");
+            }
+            System.out.print("\t");
+            bw.write("\t");
+            //Print occurrence's edges info
+            String edgeStr="";
+            for (Int2ObjectMap.Entry<Int2ObjectAVLTreeMap<Int2IntOpenHashMap>> source : outAdjLists.int2ObjectEntrySet())
+            {
+                int idSource= source.getIntKey();
+                Int2ObjectAVLTreeMap<Int2IntOpenHashMap> mapTimes=source.getValue();
+                for (Int2ObjectMap.Entry<Int2IntOpenHashMap> time : mapTimes.int2ObjectEntrySet())
                 {
-                    int idDest=dest.getIntKey();
-                    int edge=dest.getIntValue();
-                    int[] props=edgeProps.get(edge);
-                    edgeStr+="("+idSource+","+idDest+","+props[0]+":"+props[1]+"),";
+                    Int2IntOpenHashMap mapAdiacs=time.getValue();
+                    for (Int2IntMap.Entry dest : mapAdiacs.int2IntEntrySet())
+                    {
+                        int idDest=dest.getIntKey();
+                        int edge=dest.getIntValue();
+                        int[] props=edgeProps.get(edge);
+                        edgeStr+="("+idSource+","+idDest+","+props[0]+":"+props[1]+"),";
+                    }
                 }
             }
+            edgeStr=edgeStr.substring(0,edgeStr.length()-1);
+            System.out.println(edgeStr);
+            bw.write(edgeStr);
+            bw.newLine();
+            bw.close();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        edgeStr=edgeStr.substring(0,edgeStr.length()-1);
-        System.out.println(edgeStr);
     }
 
     //Write query to output file
