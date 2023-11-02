@@ -136,15 +136,15 @@ public class FileManager
             Int2ObjectOpenHashMap<Int2ObjectAVLTreeMap<Int2IntOpenHashMap>> outAdjLists=occ.getOutAdjLists();
             IntIterator it=nodeLabs.keySet().iterator();
             int idNode=it.nextInt();
-            System.out.print("("+idNode+":"+nodeLabs.get(idNode)+")");
+            // System.out.print("("+idNode+":"+nodeLabs.get(idNode)+")");
             bw.write("("+idNode+":"+nodeLabs.get(idNode)+")");
             while(it.hasNext())
             {
                 idNode=it.nextInt();
-                System.out.print(","+"("+idNode+":"+nodeLabs.get(idNode)+")");
+                // System.out.print(","+"("+idNode+":"+nodeLabs.get(idNode)+")");
                 bw.write(","+"("+idNode+":"+nodeLabs.get(idNode)+")");
             }
-            System.out.print("\t");
+            // System.out.print("\t");
             bw.write("\t");
             //Print occurrence's edges info
             String edgeStr="";
@@ -165,7 +165,7 @@ public class FileManager
                 }
             }
             edgeStr=edgeStr.substring(0,edgeStr.length()-1);
-            System.out.println(edgeStr);
+            // System.out.println(edgeStr);
             bw.write(edgeStr);
             bw.newLine();
             bw.close();
